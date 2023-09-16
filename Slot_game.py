@@ -7,6 +7,7 @@ MAX_BET = 100
 ROWS = 3
 COLS = 3
 
+
 symbol_count = {
     "Mango": 2,
     "Apple": 4,
@@ -121,6 +122,7 @@ def spin(balance):
         total_bet = bet * line
         if balance < total_bet:
             print(f"Your bet is more than balance. You have ${balance} and you just tried to bet ${total_bet}")
+            print(f"To play you have to add more ${total_bet - balance} to your current balance.")
             more_balance = input("Do you want to add more balance if yes type yes else no or y else n. : ")
             if more_balance.lower() == "yes" or more_balance.lower() == "y":
                 while True:
@@ -151,10 +153,14 @@ def spin(balance):
 
 
 def main():
-    global rem_bal
-    balance = deposit()
+    count = 0
     while True:
+        count += 1
+        if count == 1:
+            balance = deposit()
         answer = input("Press Enter to play or q to quit. ")
+
+        count += 1
         if answer.lower() == "q":
             break
         rem_bal = spin(balance)
