@@ -1,5 +1,3 @@
-I'd be glad to create a comprehensive README file for your Python code:
-
 **## Brute Force Password Recovery for Excel and Zip Files (Educational Use Only)**
 
 **Disclaimer:** This script is for educational purposes only. Brute-forcing passwords is illegal without proper authorization. Using this script on files you don't own is strictly prohibited.
