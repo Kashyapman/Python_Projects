@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Excellence Launch</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            background-color: #1a0a2e;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: #f8fafc;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        /* --- 5-Color Animated Gradient Background --- */
+        .animated-bg {
+            background: linear-gradient(-45deg, #1a0a2e, #ff00cc, #ff8c00, #00c6ff, #32cd32);
+            background-size: 400% 400%;
+            animation: gradientBG 20s ease infinite;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- Slide Structure --- */
+        .slide {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+            scroll-snap-align: start;
+        }
+
+        /* --- General Animation for Active Slide Content --- */
+        .slide .content {
+            transform: translateY(100px);
+            opacity: 0;
+            transition: 1s all ease;
+        }
+        .slide.active .content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* --- Card & Button Styling --- */
+        .glass-card {
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(0, 0, 0, 0.35);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* --- Navigation Dots --- */
+        .nav-dot {
+            width: 12px; height: 12px; border-radius: 50%; background-color: rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease; cursor: pointer;
+        }
+        .nav-dot.active { background-color: #ff8c00; transform: scale(1.5); }
+
+        /* --- Emoji Rain --- */
+        .emoji-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 20; pointer-events: none;
+        }
+        .emoji {
+            position: absolute; bottom: -100px; animation: float-up linear; opacity: 0;
+            font-size: calc(1.5rem + 3vw);
+        }
+        @keyframes float-up {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-120vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* --- Circular Journey Layout --- */
+        .circle-container {
+            position: relative; width: 350px; height: 350px; margin: 2rem auto;
+            transform: scale(0.8); opacity: 0;
+            transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s, opacity 1s ease 0.2s;
+        }
+        .slide.active .circle-container { transform: scale(1); opacity: 1; }
+        .circle-item {
+            position: absolute; width: 100px; height: 100px;
+            border-radius: 50%; display: flex; flex-direction: column; align-items: center;
+            justify-content: center; text-align: center; color: white; transform-origin: center center;
+            transition: transform 0.5s ease;
+            background: radial-gradient(circle, #ff00cc, #3a1c71);
+            box-shadow: 0 0 15px #ff00cc;
+            animation: pulse-glow 3s infinite alternate;
+        }
+        @keyframes pulse-glow {
+            from { box-shadow: 0 0 15px #ff00cc; }
+            to { box-shadow: 0 0 30px #00c6ff; }
+        }
+        .circle-item:hover { transform: scale(1.1); }
+        .circle-item .icon { font-size: 2rem; color: #ff8c00; }
+        .circle-item .title { font-size: 0.8rem; font-weight: bold; margin-top: 5px; }
+        .circle-arrow-svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        .circle-arrow-path {
+            stroke: rgba(255,255,255,0.5);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 157;
+            stroke-dashoffset: 157;
+        }
+        .slide.active .circle-arrow-path { animation: draw-arrow 1s forwards; }
+        .slide.active .circle-arrow-path:nth-of-type(1) { animation-delay: 1s; }
+        .slide.active .circle-arrow-path:nth-of-type(2) { animation-delay: 1.5s; }
+        .slide.active .circle-arrow-path:nth-of-type(3) { animation-delay: 2s; }
+        .slide.active .circle-arrow-path:nth-of-type(4) { animation-delay: 2.5s; }
+        @keyframes draw-arrow { to { stroke-dashoffset: 0; } }
+        
+        /* --- Background Footprints --- */
+        .footprint-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden; z-index: 0; pointer-events: none;
+        }
+        .footprint {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0;
+            animation: fade-footprint 3s ease-in-out;
+        }
+        @keyframes fade-footprint {
+            0%, 100% { opacity: 0; }
+            20%, 80% { opacity: 0.3; }
+        }
+
+        /* --- Step 1: Collect Animation --- */
+        .collect-animation-container { position: relative; width: 100%; height: 100%; max-width: 400px; max-height: 300px; }
+        .collect-doc-icon { position: absolute; font-size: 4rem; z-index: 1; }
+        .magnifying-glass { position: absolute; font-size: 5rem; pointer-events: none; z-index: 2; }
+        .slide.active .magnifying-glass { animation: move-glass-infinite 10s infinite cubic-bezier(0.45, 0.05, 0.55, 0.95); }
+        @keyframes move-glass-infinite {
+            0%, 100% { top: 20%; left: 20%; }
+            25% { top: 60%; left: 80%; }
+            50% { top: 10%; left: 70%; }
+            75% { top: 45%; left: 45%; }
+        }
+
+        /* --- Step 2: Evaluate Animation --- */
+        .evaluate-list li { display: flex; align-items: center; margin-bottom: 1rem; opacity: 0; transform: translateX(-50px); }
+        .slide.active .evaluate-list li { animation: fade-in-item 0.5s forwards; }
+        .slide.active .evaluate-list li:nth-child(1) { animation-delay: 0.5s; }
+        .slide.active .evaluate-list li:nth-child(2) { animation-delay: 2s; }
+        .slide.active .evaluate-list li:nth-child(3) { animation-delay: 3.5s; }
+        .checkbox { width: 24px; height: 24px; border: 2px solid #fff; border-radius: 4px; margin-right: 1rem; }
+        .checkmark { stroke: #32cd32; stroke-width: 3; stroke-dasharray: 24; stroke-dashoffset: 24; }
+        .slide.active .checkmark { animation: draw-check 0.5s forwards; }
+        .slide.active li:nth-child(1) .checkmark { animation-delay: 1.5s; }
+        .slide.active li:nth-child(2) .checkmark { animation-delay: 3s; }
+        .slide.active li:nth-child(3) .checkmark { animation-delay: 4.5s; }
+        .pen { position: absolute; font-size: 4rem; opacity: 0; }
+        .slide.active .pen { animation: pen-check 5s forwards; }
+        @keyframes fade-in-item { to { opacity: 1; transform: translateX(0); } }
+        @keyframes draw-check { to { stroke-dashoffset: 0; } }
+        @keyframes pen-check {
+            0%, 100% { opacity: 0; } 10%, 90% { opacity: 1; }
+            15% { transform: translate(-58px, -100px) rotate(-23deg); } 
+            25% { transform: translate(-48px, -90px) rotate(-38deg); }
+            30% { transform: translate(-58px, -100px) rotate(-23deg); } 
+            45% { transform: translate(-58px, -52px) rotate(-23deg); } 
+            55% { transform: translate(-48px, -42px) rotate(-38deg); }
+            60% { transform: translate(-58px, -52px) rotate(-23deg); }
+            75% { transform: translate(-58px, -4px) rotate(-23deg); } 
+            85% { transform: translate(-48px, 6px) rotate(-38deg); }
+            90% { transform: translate(-58px, -4px) rotate(-23deg); }
+        }
+
+        /* --- Step 3: Select Animation --- */
+        .select-container { display: flex; gap: 1rem; justify-content: center; position: relative; }
+        .lightbulb { color: #4b5563; font-size: 4rem; transition: all 0.5s ease; }
+        .lightbulb.glowing { color: #ff8c00; animation: bulb-glow 2s infinite alternate; }
+        .cursor-selector { position: absolute; font-size: 2.5rem; opacity: 0; }
+        .slide.active .cursor-selector { animation: click-bulb 5s forwards; }
+        .slide.active .lightbulb.falling { animation: fall-down 1s forwards 3.5s; }
+        .slide.active .lightbulb.selected { animation: select-bulb 1s forwards 3.5s; }
+        @keyframes bulb-glow { from { text-shadow: 0 0 10px #ff8c00; } to { text-shadow: 0 0 25px #ff8c00; } }
+        @keyframes click-bulb {
+            0% { opacity: 0; transform: translate(100px, -50px); }
+            20%, 80% { opacity: 1; transform: translate(0, 0); }
+            60% { transform: scale(0.8); }
+            100% { opacity: 0; }
+        }
+        @keyframes fall-down { to { transform: translateY(100vh) rotate(90deg); opacity: 0; } }
+        @keyframes select-bulb { to { transform: scale(1.5); } }
+
+        /* --- Step 4: Plan Animation --- */
+        .plan-roadmap { stroke: #fff; stroke-width: 4; stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .slide.active .plan-roadmap { animation: draw-roadmap 3s forwards linear 1s; }
+        .plan-dot { fill: #ff8c00; r: 10; filter: drop-shadow(0 0 10px #ff8c00); opacity: 0; }
+        .slide.active .plan-dot { animation: show-dot 0.1s forwards 1s; }
+        @keyframes draw-roadmap { to { stroke-dashoffset: 0; } }
+        @keyframes show-dot { to { opacity: 1; } }
+
+        /* --- Step 5: Execute Animation --- */
+        .execute-container { position: relative; width: 100px; height: 300px; }
+        .rocket { font-size: 6rem; position: absolute; bottom: 0; left: 0; }
+        .slide.active .rocket { animation: rocket-launch 3s forwards 1s cubic-bezier(0.6, -0.28, 0.74, 0.05); }
+        .trail { position: absolute; font-size: 2rem; opacity: 0; }
+        .slide.active .trail { animation: fade-trail 0.5s forwards; }
+        @keyframes rocket-launch {
+            0% { transform: translateY(0) rotate(0); }
+            100% { transform: translateY(-120vh) rotate(10deg); }
+        }
+        @keyframes fade-trail {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+        
+        /* --- Final Slide CTA --- */
+        .cta-button {
+            display: inline-block; padding: 1rem 2rem; border-radius: 0.5rem; font-weight: 700;
+            text-align: center; transition: all 0.3s ease; border: none;
+            background: rgba(255, 255, 255, 0.9); color: #1a0a2e;
+        }
+        .mouse-pointer { position: absolute; font-size: 2.5rem; opacity: 0; pointer-events: none; }
+        .slide.active .mouse-pointer { animation: click-it 4s forwards 1s; }
+        .slide.active .cta-button { animation: button-click 0.2s forwards 2.5s; }
+        @keyframes click-it {
+            0% { opacity: 0; transform: translate(100px, 50px); }
+            20%, 80% { opacity: 1; transform: translate(0, 0); }
+            60% { transform: translate(0, 0) scale(0.8); }
+            100% { opacity: 0; transform: translate(0, 0); }
+        }
+        @keyframes button-click {
+            from { transform: scale(1); }
+            to { transform: scale(0.95); background: #ff8c00; }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div id="nav-dots" class="fixed right-6 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4"></div>
+
+    <!-- Slide 1: Hero -->
+    <section class="slide text-center" data-slide="0">
+        <div class="relative z-10 content">
+            <h1 class="text-6xl md:text-8xl font-black text-white uppercase tracking-wider">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-pink-400 to-cyan-300">Better. Smarter. Everyday.</span>
+            </h1>
+            <p class="mt-4 text-xl md:text-2xl text-slate-100 max-w-3xl mx-auto">Welcome to Process Excellence. It's our mission to make work, work better.</p>
+        </div>
+    </section>
+
+    <!-- Slide 2: What is Process Excellence? -->
+    <section id="what-is-it" class="slide" data-slide="1">
+        <div class="max-w-6xl mx-auto text-center content">
+            <div class="mx-auto mb-8 w-48 h-48 flex items-center justify-center rounded-full border-8 border-purple-500/30 bg-black/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-pink-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+            </div>
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4">What is <span class="text-pink-400">Process Excellence?</span></h2>
+            <p class="text-lg md:text-xl text-slate-200 max-w-4xl">It's a simple idea: continuously improving how we work together to eliminate roadblocks, create smarter workflows, and deliver amazing value.</p>
+        </div>
+    </section>
+
+    <!-- Video Slide -->
+    <section class="slide" data-slide="2">
+        <div class="content w-full max-w-4xl text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">See It In Action</h2>
+            <div class="aspect-video w-full rounded-lg shadow-2xl shadow-black/50 overflow-hidden">
+                <div id="youtube-player" class="w-full h-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 4: The Mission -->
+    <section id="mission" class="slide" data-slide="3">
+        <div class="max-w-6xl mx-auto text-center content">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-2">Less Friction, <span class="text-orange-300">More Impact</span></h2>
+            <p class="text-lg text-slate-200 mb-12">We focus on three key goals to improve our collective work.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-card p-6 md:p-8 text-center"><span class="text-6xl mb-4">🚧</span><h3 class="text-2xl font-bold text-white mb-2">Eliminate Roadblocks</h3><p class="text-slate-200">Remove frustrating hurdles and repetitive tasks.</p></div>
+                <div class="glass-card p-6 md:p-8 text-center"><span class="text-6xl mb-4">⚙️</span><h3 class="text-2xl font-bold text-white mb-2">Create Smart Workflows</h3><p class="text-slate-200">Design smoother, more intelligent processes.</p></div>
+                <div class="glass-card p-6 md:p-8 text-center"><span class="text-6xl mb-4">💎</span><h3 class="text-2xl font-bold text-white mb-2">Deliver Amazing Value</h3><p class="text-slate-200">Focus energy on what truly matters.</p></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Circular Journey Overview Slide -->
+    <section class="slide" data-slide="4">
+        <div class="footprint-container"></div>
+        <div class="text-center content">
+            <h2 class="text-4xl md:text-5xl font-bold text-white">Your Idea's <span class="text-pink-400">Journey</span></h2>
+            <p class="mt-3 text-lg text-slate-200 mb-4">A five-step path from concept to reality.</p>
+            <div id="circle-journey" class="circle-container">
+                <!-- Items and arrows will be injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- JOURNEY DETAIL SLIDES -->
+    <section class="slide" data-slide="5">
+        <div class="w-full max-w-4xl content grid md:grid-cols-2 items-center gap-12">
+            <div id="collect-animation" class="collect-animation-container">
+                <div class="magnifying-glass">🔍</div>
+                <div class="collect-doc-icon" style="top: 20%; left: 20%;">📄</div>
+                <div class="collect-doc-icon" style="top: 60%; left: 80%;">📄</div>
+                <div class="collect-doc-icon" style="top: 10%; left: 70%;">📄</div>
+                <div class="collect-doc-icon" style="top: 45%; left: 45%;">📄</div>
+            </div>
+            <div class="text-center md:text-left">
+                 <p class="text-lg font-bold text-cyan-300">STEP 1: COLLECT</p>
+                 <p class="text-lg text-slate-200 mt-4">We gather all brilliant ideas from across the company through our central portal.</p>
+            </div>
+        </div>
+    </section>
+    <section class="slide" data-slide="6">
+         <div class="w-full max-w-4xl content">
+            <div class="text-center mb-8"><p class="text-lg font-bold text-cyan-300">STEP 2: EVALUATE</p></div>
+            <div class="grid md:grid-cols-2 items-center gap-12">
+                <div class="relative flex justify-center items-center">
+                    <div class="pen">✍️</div>
+                    <ul class="evaluate-list text-2xl font-bold">
+                        <li><div class="checkbox"><svg class="checkmark" fill="none" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg></div>Impact</li>
+                        <li><div class="checkbox"><svg class="checkmark" fill="none" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg></div>Feasibility</li>
+                        <li><div class="checkbox"><svg class="checkmark" fill="none" viewBox="0 0 24 24"><path d="M4 12l6 6L20 6"/></svg></div>Effort</li>
+                    </ul>
+                </div>
+                <div class="text-center md:text-left"><p class="text-lg text-slate-200">Each idea is scored against key criteria to ensure fairness and identify the most promising concepts.</p></div>
+            </div>
+        </div>
+    </section>
+    <section class="slide" data-slide="7">
+        <div class="w-full max-w-4xl content text-center">
+            <p class="text-lg font-bold text-cyan-300">STEP 3: SELECT</p>
+            <div class="select-container my-12">
+                <div class="lightbulb falling">💡</div>
+                <div class="lightbulb falling">💡</div>
+                <div class="lightbulb glowing selected">💡</div>
+                <div class="lightbulb falling">💡</div>
+                <div class="lightbulb falling">💡</div>
+                <div class="cursor-selector">👆🏻</div>
+            </div>
+            <p class="text-lg text-slate-200 max-w-2xl mx-auto">The highest-scoring ideas are championed for development, ensuring we focus on what matters most.</p>
+        </div>
+    </section>
+    <section class="slide" data-slide="8">
+        <div class="w-full max-w-4xl content text-center">
+            <p class="text-lg font-bold text-cyan-300">STEP 4: PLAN</p>
+            <svg class="w-full max-w-md mx-auto my-8" viewBox="0 0 300 100">
+                <text x="10" y="25" fill="white" font-size="12">Start</text>
+                <text x="260" y="25" fill="white" font-size="12">Finish</text>
+                <path id="roadmap" class="plan-roadmap" d="M10 50 C 50 10, 100 90, 150 50 S 250 10, 290 50" fill="none"/>
+                <circle class="plan-dot" r="8">
+                    <animateMotion dur="3s" begin="4s" fill="freeze">
+                        <mpath xlink:href="#roadmap" />
+                    </animateMotion>
+                </circle>
+            </svg>
+            <p class="text-lg text-slate-200 max-w-2xl mx-auto">We create a clear project plan, defining the team, timeline, and goals for the selected idea.</p>
+        </div>
+    </section>
+    <section class="slide" data-slide="9">
+        <div class="w-full max-w-4xl content text-center">
+            <p class="text-lg font-bold text-cyan-300">STEP 5: EXECUTE</p>
+            <div class="execute-container mx-auto my-8">
+                <div class="rocket">🚀</div>
+                <div id="rocket-trail" class="absolute bottom-0 left-1/2 -translate-x-1/2"></div>
+            </div>
+             <p class="text-lg text-slate-200 max-w-2xl mx-auto">The project team brings the idea to life through focused sprints and implementation.</p>
+        </div>
+    </section>
+
+    <!-- Slide 11: Rewards -->
+    <section id="rewards" class="slide" data-slide="10">
+        <div id="emoji-rain-container" class="emoji-container"></div>
+        <div class="max-w-4xl mx-auto text-center content relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold text-white">Your Brilliance, <span class="text-yellow-300">Rewarded</span></h2>
+            <p class="mt-3 text-lg text-slate-200 mb-10">Great ideas deserve great rewards. We celebrate every contribution.</p>
+            <div class="grid md:grid-cols-2 gap-6 items-stretch">
+                <div class="glass-card p-4 flex flex-col justify-center items-center border-2 border-yellow-500/50" style="box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);"><h3 class="text-lg font-bold text-yellow-300">The Spark</h3><p class="text-slate-200 text-xs mt-1 flex-grow">Amazon Voucher & Workspace decor.</p><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 my-2 text-yellow-300" viewBox="0 0 20 20" fill="currentColor" style="filter: drop-shadow(0 0 10px #FFD700);"><path fill-rule="evenodd" d="M5 5a3 3 0 015-2.236A3 3 0 0114.83 6H16a2 2 0 110 4h-1.17a3 3 0 01-5.66 0H8a2 2 0 110-4h1.17A3 3 0 015 5zm7 4a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" /></svg></div>
+                <div class="glass-card p-4 flex flex-col justify-center items-center border-2 border-yellow-500/50" style="box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);"><h3 class="text-lg font-bold text-yellow-300">The Visionary</h3><p class="text-slate-200 text-xs mt-1 flex-grow">For the highest impact.</p><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 my-2 text-yellow-300" viewBox="0 0 20 20" fill="currentColor" style="filter: drop-shadow(0 0 10px #FFD700);"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" /></svg><p class="font-semibold text-white text-xs">Premium gift & Wall of Fame</p></div>
+                <div class="glass-card p-4 flex flex-col justify-center items-center border-2 border-yellow-500/50" style="box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);"><h3 class="text-lg font-bold text-yellow-300">The Pathfinder</h3><p class="text-slate-200 text-xs mt-1 flex-grow">Family experience.</p><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 my-2 text-yellow-300" viewBox="0 0 20 20" fill="currentColor" style="filter: drop-shadow(0 0 10px #FFD700);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" /></svg></div>
+                <div class="glass-card p-4 flex flex-col justify-center items-center border-2 border-yellow-500/50" style="box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);"><h3 class="text-lg font-bold text-yellow-300">Synergy Champions</h3><p class="text-slate-200 text-xs mt-1 flex-grow">Leadership Spotlight & courses.</p><svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 my-2 text-yellow-300" viewBox="0 0 20 20" fill="currentColor" style="filter: drop-shadow(0 0 10px #FFD700);"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" /></svg></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide 12: Call to Action -->
+    <section id="cta" class="slide text-center" data-slide="11">
+        <div class="relative z-10 content">
+            <h2 class="text-5xl md:text-7xl font-black text-white">Ready to Make an <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-pink-400 to-cyan-300">Impact?</span></h2>
+            <p class="mt-4 text-lg text-slate-200 max-w-2xl mx-auto">Your first great idea is just a click away. Let's build a better workplace together.</p>
+            <div class="mt-10 relative inline-block">
+                <a href="https://process-excellence.netlifv.app/" target="_blank" class="cta-button text-xl">SUBMIT YOUR IDEA NOW</a>
+                <div class="mouse-pointer">👆🏻</div>
+            </div>
+        </div>
+        <div id="cta-emoji-container" class="emoji-container"></div>
+    </section>
+    
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                height: '100%',
+                width: '100%',
+                videoId: '6qBqbMbRFWg',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 1, // Show controls so user can unmute
+                    'mute': 0, // Attempt to play with sound
+                    'loop': 1,
+                    'playlist': '6qBqbMbRFWg'
+                },
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Player is ready. Autoplay is handled by playerVars.
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            const navDotsContainer = document.getElementById('nav-dots');
+            let currentSlide = 0;
+            let emojiInterval = null;
+            let ctaCelebrationTimeout = null;
+            let footprintInterval = null;
+            let rocketTrailInterval = null;
+
+            const circleContainer = document.getElementById('circle-journey');
+            if (circleContainer) {
+                const items = [
+                    { name: 'Collect', icon: '📄' },
+                    { name: 'Evaluate', icon: '✅' },
+                    { name: 'Select', icon: '⭐' },
+                    { name: 'Plan', icon: '🗺️' },
+                    { name: 'Execute', icon: '🚀' }
+                ];
+                const radius = 125;
+                const centerX = 175;
+                const centerY = 175;
+                const totalItems = items.length;
+                
+                const arrowSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                arrowSvg.classList.add('circle-arrow-svg');
+                arrowSvg.setAttribute('viewBox', '0 0 350 350');
+                
+                const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+                const marker = document.createElementNS("http://www.w3.org/2000/svg", "marker");
+                marker.setAttribute('id', 'arrowhead');
+                marker.setAttribute('viewBox', '0 0 10 10');
+                marker.setAttribute('refX', '8');
+                marker.setAttribute('refY', '5');
+                marker.setAttribute('markerWidth', '6');
+                marker.setAttribute('markerHeight', '6');
+                marker.setAttribute('orient', 'auto-start-reverse');
+                const arrowheadPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                arrowheadPath.setAttribute('d', 'M 0 0 L 10 5 L 0 10 z');
+                arrowheadPath.setAttribute('fill', 'rgba(255,255,255,0.5)');
+                marker.appendChild(arrowheadPath);
+                defs.appendChild(marker);
+                arrowSvg.appendChild(defs);
+
+                items.forEach((item, i) => {
+                    const angle = (i / totalItems) * 2 * Math.PI - (Math.PI / 2); // Start from top
+                    const x = centerX + radius * Math.cos(angle) - 50;
+                    const y = centerY + radius * Math.sin(angle) - 50;
+
+                    const div = document.createElement('div');
+                    div.classList.add('circle-item');
+                    div.innerHTML = `<span class="icon">${item.icon}</span><span class="title">${item.name}</span>`;
+                    div.style.left = `${x}px`;
+                    div.style.top = `${y}px`;
+                    circleContainer.appendChild(div);
+
+                    if (i < totalItems - 1) { // Only draw 4 arrows
+                        const startAngle = angle + (Math.PI / totalItems * 0.7);
+                        const endAngle = ((i + 1) / totalItems) * 2 * Math.PI - (Math.PI / 2) - (Math.PI / totalItems * 0.7);
+                        
+                        const startX = centerX + radius * Math.cos(startAngle);
+                        const startY = centerY + radius * Math.sin(startAngle);
+                        const endX = centerX + radius * Math.cos(endAngle);
+                        const endY = centerY + radius * Math.sin(endAngle);
+
+                        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                        path.classList.add('circle-arrow-path');
+                        path.setAttribute('d', `M ${startX} ${startY} A ${radius} ${radius} 0 0 1 ${endX} ${endY}`);
+                        path.setAttribute('marker-end', 'url(#arrowhead)');
+                        arrowSvg.appendChild(path);
+                    }
+                });
+                circleContainer.appendChild(arrowSvg);
+            }
+
+            slides.forEach((slide, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('nav-dot');
+                dot.dataset.slide = index;
+                dot.addEventListener('click', () => goToSlide(index));
+                navDotsContainer.appendChild(dot);
+            });
+
+            const navDots = document.querySelectorAll('.nav-dot');
+
+            const goToSlide = (slideIndex) => {
+                slides[slideIndex].scrollIntoView({ behavior: 'smooth' });
+            };
+
+            const updateActiveState = (slideIndex) => {
+                if (currentSlide === slideIndex) return;
+                currentSlide = slideIndex;
+
+                slides.forEach((slide, index) => {
+                    slide.classList.toggle('active', index === slideIndex);
+                });
+
+                navDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === slideIndex);
+                });
+                
+                const videoSlideIndex = 2;
+                if (player && typeof player.playVideo === 'function') {
+                    if (slideIndex === videoSlideIndex) {
+                        player.playVideo();
+                    } else {
+                        player.pauseVideo();
+                    }
+                }
+
+                const rewardsSlideIndex = 10;
+                if (slideIndex === rewardsSlideIndex && !emojiInterval) {
+                    emojiInterval = setInterval(() => createEmoji('emoji-rain-container'), 200);
+                } else if (slideIndex !== rewardsSlideIndex && emojiInterval) {
+                    clearInterval(emojiInterval);
+                    emojiInterval = null;
+                }
+
+                const ctaSlideIndex = 11;
+                if (slideIndex === ctaSlideIndex) {
+                    ctaCelebrationTimeout = setTimeout(startCtaCelebration, 2700);
+                } else {
+                    clearTimeout(ctaCelebrationTimeout);
+                }
+
+                const journeyOverviewSlide = 4;
+                if (slideIndex === journeyOverviewSlide && !footprintInterval) {
+                    footprintInterval = setInterval(createFootprint, 500);
+                } else if (slideIndex !== journeyOverviewSlide && footprintInterval) {
+                    clearInterval(footprintInterval);
+                    footprintInterval = null;
+                }
+                
+                const executeSlideIndex = 9;
+                if (slideIndex === executeSlideIndex && !rocketTrailInterval) {
+                    rocketTrailInterval = setInterval(createRocketTrail, 50);
+                    setTimeout(() => {
+                        clearInterval(rocketTrailInterval);
+                        rocketTrailInterval = null;
+                    }, 2800);
+                } else if (slideIndex !== executeSlideIndex && rocketTrailInterval) {
+                    clearInterval(rocketTrailInterval);
+                    rocketTrailInterval = null;
+                }
+            };
+            
+            const createEmoji = (containerId) => {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+                
+                const emoji = document.createElement('div');
+                emoji.classList.add('emoji');
+                const emojiArray = ['🥳', '🎉', '😎', '🤩', '🏆', '✨', '👍', '🚀', '💡', '🌟'];
+                emoji.innerText = emojiArray[Math.floor(Math.random() * emojiArray.length)];
+                
+                emoji.style.left = Math.random() * 100 + 'vw';
+                emoji.style.animationDuration = Math.random() * 3 + 4 + 's';
+                
+                container.appendChild(emoji);
+                
+                setTimeout(() => {
+                    emoji.remove();
+                }, 7000);
+            };
+
+            const createFootprint = () => {
+                const activeSlide = document.querySelector('.slide.active');
+                if (!activeSlide) return;
+                const container = activeSlide.querySelector('.footprint-container');
+                if (!container) return;
+                
+                const footprint = document.createElement('span');
+                footprint.classList.add('footprint');
+                footprint.innerText = '👣';
+                footprint.style.left = `${Math.random() * 90}%`;
+                footprint.style.top = `${Math.random() * 90}%`;
+                footprint.style.transform = `rotate(${Math.random() * 360}deg)`;
+                footprint.style.animationDelay = `${Math.random() * 3}s`;
+                container.appendChild(footprint);
+
+                setTimeout(() => {
+                    footprint.remove();
+                }, 3000);
+            };
+
+            const createRocketTrail = () => {
+                const container = document.getElementById('rocket-trail');
+                if (!container) return;
+                const trail = document.createElement('div');
+                trail.classList.add('trail');
+                const trailEmojis = ['🔥', '💨', '✨'];
+                trail.innerText = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+                trail.style.left = `${Math.random() * 40 - 20}px`;
+                trail.style.animationDelay = `${Math.random() * 0.2}s`;
+                container.appendChild(trail);
+                setTimeout(() => {
+                    trail.remove();
+                }, 500);
+            };
+
+            const startCtaCelebration = () => {
+                const container = document.getElementById('cta-emoji-container');
+                if (!container) return;
+                for (let i=0; i<50; i++) {
+                    setTimeout(() => createEmoji('cta-emoji-container'), i * 50);
+                }
+            };
+
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (currentSlide < slides.length - 1) goToSlide(currentSlide + 1);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (currentSlide > 0) goToSlide(currentSlide - 1);
+                }
+            });
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const slideIndex = parseInt(entry.target.dataset.slide);
+                        updateActiveState(slideIndex);
+                    }
+                });
+            }, { threshold: 0.6 });
+
+            slides.forEach(slide => observer.observe(slide));
+            
+            updateActiveState(0);
+        });
+    </script>
+</body>
+</html>
