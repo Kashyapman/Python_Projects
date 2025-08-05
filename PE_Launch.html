@@ -296,7 +296,11 @@
         <div class="content w-full max-w-4xl text-center">
             <h2 class="text-3xl font-bold text-white mb-6">See It In Action</h2>
             <div class="aspect-video w-full rounded-lg shadow-2xl shadow-black/50 overflow-hidden">
-                <div id="youtube-player" class="w-full h-full"></div>
+                <video id="local-video-player" class="w-full h-full" controls autoplay muted loop>
+                    <!-- IMPORTANT: Replace this src with the path to your local video file -->
+                    <source src="Process Excellence Explainer Series.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
             </div>
         </div>
     </section>
@@ -420,38 +424,14 @@
             <h2 class="text-5xl md:text-7xl font-black text-white">Ready to Make an <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-pink-400 to-cyan-300">Impact?</span></h2>
             <p class="mt-4 text-lg text-slate-200 max-w-2xl mx-auto">Your first great idea is just a click away. Let's build a better workplace together.</p>
             <div class="mt-10 relative inline-block">
-                <a href="https://process-excellence.netlifv.app/" target="_blank" class="cta-button text-xl">SUBMIT YOUR IDEA NOW</a>
+                <a href="https://sites.google.com/fplabs.tech/cd1-process-excellence" target="_blank" class="cta-button text-xl">SUBMIT YOUR IDEA NOW</a>
                 <div class="mouse-pointer">👆🏻</div>
             </div>
         </div>
         <div id="cta-emoji-container" class="emoji-container"></div>
     </section>
     
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-player', {
-                height: '100%',
-                width: '100%',
-                videoId: '6qBqbMbRFWg',
-                playerVars: {
-                    'autoplay': 1,
-                    'controls': 1, // Show controls so user can unmute
-                    'mute': 0, // Attempt to play with sound
-                    'loop': 1,
-                    'playlist': '6qBqbMbRFWg'
-                },
-                events: {
-                    'onReady': onPlayerReady
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            // Player is ready. Autoplay is handled by playerVars.
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             const slides = document.querySelectorAll('.slide');
             const navDotsContainer = document.getElementById('nav-dots');
@@ -460,6 +440,13 @@
             let ctaCelebrationTimeout = null;
             let footprintInterval = null;
             let rocketTrailInterval = null;
+            let player;
+
+            function onYouTubeIframeAPIReady() {
+                // This function is now empty as we are using the HTML5 video player
+            }
+            
+            const localVideoPlayer = document.getElementById('local-video-player');
 
             const circleContainer = document.getElementById('circle-journey');
             if (circleContainer) {
@@ -553,11 +540,11 @@
                 });
                 
                 const videoSlideIndex = 2;
-                if (player && typeof player.playVideo === 'function') {
+                if (localVideoPlayer) {
                     if (slideIndex === videoSlideIndex) {
-                        player.playVideo();
+                        localVideoPlayer.play();
                     } else {
-                        player.pauseVideo();
+                        localVideoPlayer.pause();
                     }
                 }
 
